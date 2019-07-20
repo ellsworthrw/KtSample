@@ -24,7 +24,7 @@ class PhotoViewer : Fragment() {
         Timber.i("showing $url")
         if (!url.isNullOrEmpty()) {
             val imageView = view.findViewById<ImageView>(R.id.image)
-            Glide.with(activity).load(url).into(imageView)
+            Glide.with(this).load(url).into(imageView)
         }
         return view
     }

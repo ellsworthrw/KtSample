@@ -20,10 +20,11 @@ class Flickr : Fragment() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: PhotoAdapter
     private var searchField: MaterialSearchView? = null
-    private val suggestionsAdapter = KtMutableListAdapter<String>(mutableListOf())
+    private val suggestionsAdapter = KtMutableListAdapter<CharSequence>(ArrayList())
     private var keyboardVisibilityListener: Unregistrar? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        Timber.d("onCreateView($savedInstanceState)")
         val view = inflater.inflate(R.layout.fragment_flickr, container, false)
         searchField = view.findViewById(R.id.search_text)
 
@@ -33,18 +34,34 @@ class Flickr : Fragment() {
             adapter = viewAdapter
             //            setHasFixedSize(true)
         }
+
         setupSearch()
+
+        val query = savedInstanceState?.getCharSequence(QUERY_KEY)
+        if (!query.isNullOrEmpty())
+            search(query)
+        val searchHistory = savedInstanceState?.getCharSequenceArrayList(SEARCH_HISTORY_KEY)
+        if (!searchHistory.isNullOrEmpty())
+            suggestionsAdapter.items = searchHistory
 
         return view
     }
 
-    private fun search(query: String) {
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putCharSequence(QUERY_KEY, searchField?.query)
+        val items = suggestionsAdapter.items
+        if (items is ArrayList)
+            outState.putCharSequenceArrayList(SEARCH_HISTORY_KEY, items)
+        Timber.d("onSaveInstanceState($outState)")
+    }
+
+    private fun search(query: CharSequence) {
         Timber.d("search($query)")
-        requestFlickrSearch(query) { result ->
+        requestFlickrSearch(query.toString()) { result ->
             if (result.isSuccess()) {
                 val photos = result.response?.photos
                 if (photos != null) {
-                    viewAdapter.setItems(photos)
+                    viewAdapter.items = photos
                 }
             } else {
                 Timber.e(result.error?.volleyError, "Error: %s", result.error)
@@ -97,8 +114,8 @@ class Flickr : Fragment() {
         suggestionsAdapter.clickListener = { _, vh, adapter ->
             Timber.d("suggestionsAdapter.onItemClick")
             val position = vh.adapterPosition
-            val query = adapter.get(position)
-            searchField?.setQuery(query, true)
+            val query = adapter[position]
+            searchField?.setQuery(query.toString(), true)
             searchField?.hideSuggestions()
             searchField?.hideKeyboard()
         }
@@ -106,5 +123,7 @@ class Flickr : Fragment() {
 
     companion object {
         const val PAGE_SIZE = "25"
+        const val QUERY_KEY = "query"
+        const val SEARCH_HISTORY_KEY = "search-history"
     }
 }
