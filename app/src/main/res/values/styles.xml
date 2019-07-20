@@ -1,0 +1,20 @@
+<resources>
+
+    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <declare-styleable name="MaterialSearchView">
+        <attr name="android:imeOptions"/>
+        <attr name="android:inputType"/>
+        <attr name="search_animate" format="boolean"/>
+        <attr name="search_focusable" format="boolean"/>
+        <attr name="search_menu_position" format="integer"/>
+        <attr name="search_hint" format="string"/>
+        <attr name="search_text_color" format="color"/>
+        <attr name="search_icon_color" format="color"/>
+    </declare-styleable>
+
+</resources>

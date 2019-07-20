@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            app:startDestination="@+id/reddit_screen"
+            xmlns:app="http://schemas.android.com/apk/res-auto" android:id="@+id/reddit">
+
+    <fragment
+            android:id="@+id/reddit_screen"
+            android:name="com.diamondedge.ktsample.reddit.Reddit"
+            android:label="@string/reddit_title"
+            tools:layout="@layout/fragment_reddit">
+        <!--
+                <action
+                    android:id="@+id/action_to_reddit_details"
+                    app:destination="@id/reddit_details"/>
+        -->
+    </fragment>
+
+    <!--
+        <fragment
+            android:id="@+id/reddit_details"
+            android:name="com.diamondedge.RedditDetails"
+            android:label="@string/title_detail"
+            tools:layout="@layout/fragment_reddit_details">
+        </fragment>
+    -->
+</navigation>
