@@ -5,14 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
 import com.diamondedge.ktadapter.KtAdapter
-import com.diamondedge.ktadapter.KtListAdapter
-import com.diamondedge.ktadapter.StringVH
+import com.diamondedge.ktadapter.KtMutableListAdapter
 import com.diamondedge.ktsample.R
 import timber.log.Timber
 
-class RedditAdapter(values: MutableList<Any>) : KtListAdapter<Any>(values) {
+class RedditAdapter(values: MutableList<RedditData>) : KtMutableListAdapter<RedditData>(values) {
 
     init {
         Timber.i("init($values)")
@@ -23,28 +21,23 @@ class RedditAdapter(values: MutableList<Any>) : KtListAdapter<Any>(values) {
         }
     }
 
-    override fun createVH(parent: ViewGroup, viewType: Int, adapter: KtAdapter<Any>): ViewHolder<Any> {
-        return when (viewType) {
-            ITEM_TYPE -> RedditVH.create(parent, adapter)
-            else -> StringVH(parent, adapter)
-        }
+    override fun createVH(parent: ViewGroup, viewType: Int, adapter: KtAdapter<RedditData>): ViewHolder<RedditData> {
+        return RedditVH.create(parent, adapter)
     }
 
-    class RedditVH(view: View, adapter: KtAdapter<Any>) : ViewHolder<Any>(view, adapter) {
+    class RedditVH(view: View, adapter: KtAdapter<RedditData>) : ViewHolder<RedditData>(view, adapter) {
 
         private val thumbNailView: ImageView = view.findViewById(R.id.thumbnail_image)
         private val titleView: TextView = view.findViewById(R.id.text1)
 
-        override fun bind(position: Int, item: Any) {
-            if (item is RedditData) {
+        override fun bind(position: Int, item: RedditData) {
 //                Glide.with(thumbNailView.context).load(item.thumbnailUrl).into(thumbNailView)
-                titleView.text = item.title
-            }
+            titleView.text = item.title
         }
 
         companion object {
 
-            fun create(parent: ViewGroup, adapter: KtAdapter<Any>): RedditVH {
+            fun create(parent: ViewGroup, adapter: KtAdapter<RedditData>): RedditVH {
                 val view = LayoutInflater.from(parent.context).inflate(R.layout.item_reddit, parent, false)
                 return RedditVH(view, adapter)
             }
@@ -52,7 +45,6 @@ class RedditAdapter(values: MutableList<Any>) : KtListAdapter<Any>(values) {
     }
 
     companion object {
-        private const val TAG = "PhotoAdapter"
         const val KEY_URL = "url"
     }
 }

@@ -3,6 +3,10 @@
 
     <string name="flickr_nav">Flickr Findr</string>
     <string name="flickr_title">Flickr Findr</string>
+
+    <string name="flickr_pag_nav">Flickr Paging</string>
+    <string name="flickr_pag_title">Flickr Paging</string>
+
     <string name="flickr_photo_title">Flickr Photo</string>
 
     <string name="reddit_title">Reddit Top</string>
@@ -10,9 +14,8 @@
 
     <string name="about">About</string>
     <string name="about_nav">About</string>
-    <string name="about_description">This provides samples of how KtVolley can be used to easily build network layer of
-        an app and
-        how KtAdapter can use Kotlin to simplify creating adapters for RecyclerView.
+    <string name="about_description">This provides samples of how KtVolley can be used to easily build the network layer
+        of an app and how KtAdapter and Kotlin can be used to simplify creating adapters for RecyclerView.
     </string>
 
     <string name="search">Search</string>
