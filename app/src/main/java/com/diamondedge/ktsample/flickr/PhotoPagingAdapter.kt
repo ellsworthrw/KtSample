@@ -3,15 +3,14 @@ package com.diamondedge.ktsample.flickr
 import android.view.ViewGroup
 import androidx.core.os.bundleOf
 import androidx.navigation.findNavController
+import androidx.recyclerview.widget.DiffUtil
 import com.diamondedge.ktadapter.KtAdapter
-import com.diamondedge.ktadapter.KtMutableListAdapter
+import com.diamondedge.ktadapter.KtPagedListAdapter
 import com.diamondedge.ktsample.R
-import timber.log.Timber
 
-class PhotoAdapter(values: MutableList<Photo>) : KtMutableListAdapter<Photo>(values) {
+class PhotoPagingAdapter : KtPagedListAdapter<Photo>(Photo::class.java, PHOTO_COMPARATOR) {
 
     init {
-        Timber.i("init($values)")
         clickListener = { v, vh, adapter ->
             val item = adapter[vh.adapterPosition]
             val bundle = bundleOf(KEY_URL to item.url)
@@ -25,5 +24,15 @@ class PhotoAdapter(values: MutableList<Photo>) : KtMutableListAdapter<Photo>(val
 
     companion object {
         const val KEY_URL = "url"
+
+        val PHOTO_COMPARATOR = object : DiffUtil.ItemCallback<Photo>() {
+            override fun areContentsTheSame(oldItem: Photo, newItem: Photo): Boolean =
+                oldItem == newItem
+
+            override fun areItemsTheSame(oldItem: Photo, newItem: Photo): Boolean =
+                oldItem.title == newItem.title
+
+            override fun getChangePayload(oldItem: Photo, newItem: Photo): Any? = null
+        }
     }
 }

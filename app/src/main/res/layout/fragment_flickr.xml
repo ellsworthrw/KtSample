@@ -25,11 +25,10 @@
             app:search_text_color="@color/active"/>
 
     <androidx.recyclerview.widget.RecyclerView
-
             android:id="@+id/recyclerview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:scrollbars="vertical"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-
             tools:listitem="@layout/item_reddit"/>
 </LinearLayout>

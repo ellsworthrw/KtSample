@@ -19,16 +19,16 @@ public class FlickrPhotoResponse {
     public static class PhotosData {
 
         @JsonField
-        int page;
+        int page = 0;
 
         @JsonField
-        String pages;
+        int pages = 0;
 
         @JsonField
-        int perpage;
+        int perpage = 0;
 
         @JsonField
-        String total;
+        int total = 0;
 
         @JsonField(name = "photo")
         List<Photo> photoList;
@@ -38,5 +38,11 @@ public class FlickrPhotoResponse {
         if (photoData != null && photoData.photoList != null)
             return photoData.photoList;
         return new ArrayList<>();
+    }
+
+    public Integer getNextPageNumber() {
+        if (photoData != null && photoData.pages > photoData.page)
+            return photoData.page + 1;
+        return null;
     }
 }

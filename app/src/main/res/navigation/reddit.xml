@@ -6,7 +6,7 @@
 
     <fragment
             android:id="@+id/reddit_screen"
-            android:name="com.diamondedge.ktsample.reddit.Reddit"
+            android:name="com.diamondedge.ktsample.reddit.RedditFragment"
             android:label="@string/reddit_title"
             tools:layout="@layout/fragment_reddit">
         <!--
