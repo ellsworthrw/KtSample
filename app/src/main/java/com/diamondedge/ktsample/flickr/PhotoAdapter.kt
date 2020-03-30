@@ -11,8 +11,7 @@ import com.diamondedge.ktsample.R
 class PhotoAdapter : KtPagedListAdapter<Photo>(Photo::class.java, PHOTO_COMPARATOR) {
 
     init {
-        clickListener = { v, vh, adapter ->
-            val item = adapter[vh.adapterPosition]
+        clickListener = { item, v, vh, adapter ->
             val bundle = bundleOf(KEY_URL to item.url)
             v.findNavController().navigate(R.id.action_to_flickr_details, bundle)
         }

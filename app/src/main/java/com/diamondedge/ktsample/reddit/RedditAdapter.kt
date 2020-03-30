@@ -14,8 +14,7 @@ class RedditAdapter(values: MutableList<RedditData>) : KtMutableListAdapter<Redd
 
     init {
         Timber.i("init($values)")
-        clickListener = { _, vh, adapter ->
-            //            val item = adapter[vh.adapterPosition]
+        clickListener = { item, _, vh, adapter ->
 //            val bundle = bundleOf(KEY_URL to item.url)
 //            v.findNavController().navigate(R.id.action_to_flickr_details, bundle)
         }

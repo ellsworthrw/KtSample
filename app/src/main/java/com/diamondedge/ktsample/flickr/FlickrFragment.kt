@@ -95,10 +95,8 @@ open class FlickrFragment : Fragment() {
                 searchField?.hideSuggestions()
         }
 
-        suggestionsAdapter.clickListener = { _, vh, adapter ->
+        suggestionsAdapter.clickListener = { query, _, vh, adapter ->
             Timber.d("suggestionsAdapter.onItemClick")
-            val position = vh.adapterPosition
-            val query = adapter[position]
             searchField?.setQuery(query.toString(), true)
             searchField?.hideSuggestions()
             searchField?.hideKeyboard()
