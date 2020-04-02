@@ -5,21 +5,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.RecyclerView
-import com.diamondedge.ktadapter.KtAdapter
 import com.diamondedge.ktadapter.KtMutableListAdapter
-import com.diamondedge.ktsample.*
-import com.diamondedge.ktvolley.ResponseListener
+import com.diamondedge.ktsample.MaterialSearchView
+import com.diamondedge.ktsample.R
+import com.diamondedge.ktsample.hideKeyboard
 import net.yslibrary.android.keyboardvisibilityevent.KeyboardVisibilityEvent
 import net.yslibrary.android.keyboardvisibilityevent.Unregistrar
 import timber.log.Timber
-import java.net.URLEncoder
 
 
 open class FlickrFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var viewAdapter: KtAdapter<Photo>
+    private val viewAdapter = PhotoAdapter()
     private var searchField: MaterialSearchView? = null
     protected val suggestionsAdapter = KtMutableListAdapter<CharSequence>(ArrayList())
     private var keyboardVisibilityListener: Unregistrar? = null
@@ -30,8 +32,6 @@ open class FlickrFragment : Fragment() {
         searchField = view.findViewById(R.id.search_text)
 
         recyclerView = view.findViewById<RecyclerView>(R.id.recyclerview).apply {
-            if (!this@FlickrFragment::viewAdapter.isInitialized)
-                viewAdapter = createAdapter()
             adapter = viewAdapter
             setHasFixedSize(true)
         }
@@ -57,26 +57,19 @@ open class FlickrFragment : Fragment() {
         Timber.d("onSaveInstanceState($outState)")
     }
 
-    open fun createAdapter(): KtAdapter<Photo> {
-        return PhotoAdapter(mutableListOf())
-    }
-
-    open fun search(query: CharSequence) {
+    fun search(query: CharSequence) {
         Timber.d("search($query)")
-        requestFlickrSearch(query.toString()) { result ->
-            if (result.isSuccess()) {
-                val photos = result.response?.photos
-                val adapter = viewAdapter
-                if (photos != null && adapter is PhotoAdapter) {
-                    adapter.items = photos
-                }
-            } else {
-                Timber.e(result.error?.volleyError, "Error: %s", result.error)
-                val error = result.error
-                if (error is MyError)
-                    error.show(this)
-            }
+
+        val config = PagedList.Config.Builder().setPageSize(PAGE_SIZE).setEnablePlaceholders(true).build()
+
+        val factory = FlickrDataSourceFactory(query.toString())
+
+        val liveData = LivePagedListBuilder(factory, config).build()
+        val pageObserver = Observer<PagedList<Photo>> { pagedList ->
+            viewAdapter.submitList(pagedList)
         }
+        liveData.observe(this, pageObserver)
+
         if (suggestionsAdapter.indexOf(query) < 0)
             suggestionsAdapter.add(query)
     }
@@ -102,10 +95,8 @@ open class FlickrFragment : Fragment() {
                 searchField?.hideSuggestions()
         }
 
-        suggestionsAdapter.clickListener = { _, vh, adapter ->
+        suggestionsAdapter.clickListener = { query, _, vh, adapter ->
             Timber.d("suggestionsAdapter.onItemClick")
-            val position = vh.adapterPosition
-            val query = adapter[position]
             searchField?.setQuery(query.toString(), true)
             searchField?.hideSuggestions()
             searchField?.hideKeyboard()
@@ -116,22 +107,5 @@ open class FlickrFragment : Fragment() {
         const val PAGE_SIZE = 25
         const val QUERY_KEY = "query"
         const val SEARCH_HISTORY_KEY = "search-history"
-
-        fun requestFlickrSearch(searchText: String, page: Int = 1, listener: ResponseListener<FlickrPhotoResponse>) {
-            MyVolley.add(
-                MyRequest.create<FlickrPhotoResponse>()
-                    .path("https://www.flickr.com/services/rest")
-                    .errorCode("15")
-                    .queryParam("method", "flickr.photos.search")
-                    .queryParam("text", URLEncoder.encode(searchText.trim(), "utf-8"))
-                    .queryParam("page", page)
-                    .queryParam("api_key", "1508443e49213ff84d566777dc211f2a")
-                    .queryParam("per_page", PAGE_SIZE)
-                    .queryParam("format", "json")
-                    .queryParam("nojsoncallback", "1")
-                    .logging("Flickr", "requestSearch")
-                    .get(listener)
-            )
-        }
     }
 }

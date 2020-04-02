@@ -6,18 +6,12 @@
             android:icon="@drawable/ic_list"
             android:contentDescription="@string/flickr_nav"
             android:title="@string/flickr_nav"/>
+
     <item
-            android:id="@+id/flickr_paging"
+            android:id="@+id/reddit"
             android:icon="@drawable/ic_list"
-            android:contentDescription="@string/flickr_pag_nav"
-            android:title="@string/flickr_pag_nav"/>
-    <!--
-        <item
-                android:id="@+id/reddit"
-                android:icon="@drawable/ic_list"
-                android:contentDescription="@string/reddit_nav"
-                android:title="@string/reddit_nav"/>
-    -->
+            android:contentDescription="@string/reddit_nav"
+            android:title="@string/reddit_nav"/>
     <item
             android:id="@+id/about"
             android:icon="@drawable/ic_feedback"

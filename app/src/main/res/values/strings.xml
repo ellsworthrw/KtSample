@@ -16,6 +16,9 @@
     <string name="about_nav">About</string>
     <string name="about_description">This provides samples of how KtVolley can be used to easily build the network layer
         of an app and how KtAdapter and Kotlin can be used to simplify creating adapters for RecyclerView.
+        \n\nFlickr Findr is a sample of using the paging library and KtAdapter. It also demonstrates that having a list
+        of strings can be displayed with a single line of code and no sub-classing of the adapter.
+        \n\nReddit Top is a sample of using KtAdapter to display a list of model objects.
     </string>
 
     <string name="search">Search</string>
